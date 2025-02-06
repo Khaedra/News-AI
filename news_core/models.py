@@ -7,7 +7,7 @@ class Article(models.Model):
     published_date = models.DateTimeField()
     summary = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    section = models.TextField()
+    section = models.TextField(default='uncategorized')
 
     def __str__(self):
         return self.title

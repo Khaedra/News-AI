@@ -8,7 +8,7 @@ import os
 load_dotenv()
 
 class GuardianAPI:
-    def __init__(self, api_key):
+    def __init__(self):
         self.api_key = os.getenv('GUARDIAN_API_KEY')
         self.base_url = "https://content.guardianapis.com" 
         
@@ -32,13 +32,13 @@ class GuardianAPI:
             print(f"Error in making request to {endpoint}: {e}")
             return []
     
-      def save_articles_to_db(self, articles):
+    def save_articles_to_db(self, articles):
         for article in articles:
             Article.objects.get_or_create(
                 source_url=article['webUrl'],  # Use source_url as unique identifier
                 defaults={
                     'title': article['webTitle'],
-                    'section': article['section'],
+                    'section': article['sectionId'],
                     'content': article['fields'].get('bodyText', ''),
                     'published_date': datetime.strptime(article['webPublicationDate'], '%Y-%m-%dT%H:%M:%SZ'),
                     'summary': article['fields'].get('trailText', '')
