@@ -5,15 +5,19 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { wrap } from "popmotion"
-
 const images = ["/city.jpg", "/redcity.jpg", "/purple.jpg"]
 const sections = ["World", "Tech", "Environment"]
+
+
+
 
 export default function Home() {
   const [currentState, setCurrentState] = useState<number>(0)
   const [direction, setDirection] = useState<number>(0)
   const [newsData, setNewsData] = useState<{ [key: string]: any }>({})
   const [isLoading, setIsLoading] = useState(true)
+
+
 
   useEffect(() => {
     setTimeout(() => setIsLoading(false), 1500)
@@ -49,26 +53,6 @@ export default function Home() {
     )
   }
 
-  const variants = {
-    enter: (direction: number) => ({
-      zIndex: 1, 
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0, 
-    }),
-    center: {
-      zIndex: 2, 
-      x: 0,
-      opacity: 1,
-
-    },
-    exit: (direction: number) => ({
-      zIndex: 0, 
-      x: direction < 0 ? 1000 : -1000, 
-      opacity: 0, 
-
-    }),
-  }
-
   return (
     <div className="relative w-screen h-screen overflow-hidden">
       {images.map((image, index) => (
@@ -90,7 +74,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70 z-10" />
 
       <motion.div
-        className="fixed left-[42%] -translate-x-1/2 z-10 text-center mt-9"
+        className="fixed left-[43%] z-10 text-center mt-9"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100, duration: 3 }}

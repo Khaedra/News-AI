@@ -7,7 +7,7 @@ from .serializers import ArticleSerializer
 from .api_clients import GuardianAPI
 from .filter import Filter
 from .ai_summarizer import AISummarizer
-
+from django.core.cache import cache
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
@@ -15,6 +15,15 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])  # Add this decorator
 def fetch_news(request, section):  # Change parameter to request
+    
+    # query cache to see if we have articles
+    cache_key = f"news_{section}"
+    cached_data = cache.get(cache_key)
+    if (cached_data):
+        print(f"Returning cached results for section: {section}")
+        return Response(cached_data)
+    
+    
     try: 
         guardian = GuardianAPI()
         ai = AISummarizer()
@@ -33,13 +42,17 @@ def fetch_news(request, section):  # Change parameter to request
         serializer = ArticleSerializer(latest_articles, many=True)
         
         result = ai.summarize(serializer.data)
-        print(result)
         
-        return Response({
-            'status': 'success', 
-            'articles': serializer.data,  # being show in browser
+        response_data = {
+            'status': 'success',
+            'articles': serializer.data,
             'response': result,
-        })
+        }
+        cache.set(cache_key, response_data, timeout=3600)  
+        print(f"Cached results for section: {section}")
+        
+        
+        return Response(response_data)
     except Exception as e:
         return Response({
             'status': 'error', 

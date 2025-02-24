@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Inter, Playfair_Display, Source_Serif_4 } from "next/font/google"
+import  GetNews  from "@/components/ui/GetNews"
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,17 +42,19 @@ export const metadata: Metadata = {
   description: "News AI Website",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} ${playfair.variable} ${inter.variable} antialiased`}
       >
-        {children}
+      {children}
       </body>
     </html>
   );

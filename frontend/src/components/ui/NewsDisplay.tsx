@@ -32,10 +32,26 @@ const cleanJsonString = (str: string) => {
     .trim()
 }
 
-export default function NewsDisplay({ section, buttonText, articles, setArticles }: NewsDisplayProps) {
+
+const getSectionColorClasses = (section: string) => {
+  switch (section) {
+    case "World":
+      return "data-[state=active]:bg-[#deb841]/30";
+    case "Tech":
+        return "data-[state=active]:bg-[#5e0b15]/30";
+    case "Environment":
+      return "data-[state=active]:bg-[#f5e6e8]/30";
+    default:
+      return "data-[state=active]:bg-white/30";
+  }
+};
+
+export default function NewsDisplay({ section, buttonText, articles , setArticles}: NewsDisplayProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selected, setSelected] = useState<string>("overview")
+
+  const tabColor = getSectionColorClasses(section);
 
   // fetch news function
   const fetchNews = async () => {
@@ -107,11 +123,11 @@ export default function NewsDisplay({ section, buttonText, articles, setArticles
               <div className="mb-6">
                 <Tabs defaultValue={selected} className="w-full" onValueChange={setSelected}>
                   <TabsList className="w-full bg-white/10 p-1">
-                    <TabsTrigger value="overview" className="flex-1 font-inter data-[state=active]:bg-white/30 data-[state=active]:text-white">
+                    <TabsTrigger value="overview" className={`flex-1 font-inter ${tabColor} data-[state=active]:text-white`}>
                       Overview
                     </TabsTrigger>
                     {[1, 2, 3, 4, 5].map((num) => (
-                      <TabsTrigger key={num} value={num.toString()} className=" font-inter flex-1 data-[state=active]:bg-white/20 data-[state=active]:text-white">
+                      <TabsTrigger key={num} value={num.toString()} className={` font-inter flex-1 ${tabColor} data-[state=active]:text-white`}>
                         {num}
                       </TabsTrigger>
                     ))}
@@ -144,15 +160,24 @@ export default function NewsDisplay({ section, buttonText, articles, setArticles
           </Card>
         </AnimatePresence>
       ) : (
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <div className="grid grid-cols-2 items-center text-center justify-center gap-6 divide-x-3 w-full h-full ">
+        <span className="px-4 text-left w-full">  
+          <h1 className="font-sourceSerif font-bold text-3xl mb-4 text-white">What is kNews?</h1>
+          <p className="text-white font-inter ">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
+        </span>
+        
+        <motion.div className="flex  h-[80%] justify-center align-bottom">
           <Button
             onClick={fetchNews}
             disabled={loading}
-            className={`w-64 h-14 my-auto rounded-xl bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 font-inter`}
+            className={`w-48 h-14 my-auto rounded-full  bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105`}
           >
             {loading ? "Fetching..." : buttonText}
           </Button>
+          
         </motion.div>
+        
+        </div>
       )}
     </div>
   )
