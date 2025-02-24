@@ -10,6 +10,7 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     section = models.TextField(default='uncategorized')
     wordcount = models.FloatField(default = 0)
+    thumbnail = models.TextField(default = "")
 
     def __str__(self):
         return self.title

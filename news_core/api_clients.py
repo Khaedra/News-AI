@@ -20,7 +20,7 @@ class GuardianAPI:
         params = {
             # 'q': section,
             'api-key': self.api_key,
-            'show-fields': 'bodyText,headline,trailText,byline,wordcount',  
+            'show-fields': 'bodyText,headline,trailText,byline,wordcount,thumbnail',  
             'page-size': page_size,
             'order-by': "newest",
             'lang': 'en',
@@ -94,6 +94,7 @@ class GuardianAPI:
                         'content': article['fields'].get('bodyText', ''), 
                         'published_date': aware_datetime,
                         'wordcount': wordcount,
+                        'thumbnail': article['fields'].get('thumbnail', ''),
                         'apiUrl': article['apiUrl'],
                     }
                 )

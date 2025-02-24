@@ -33,6 +33,7 @@ def fetch_news(request, section):  # Change parameter to request
         serializer = ArticleSerializer(latest_articles, many=True)
         
         result = ai.summarize(serializer.data)
+        print(result)
         
         return Response({
             'status': 'success', 
