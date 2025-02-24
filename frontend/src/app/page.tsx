@@ -49,7 +49,6 @@ export default function Home() {
     )
   }
 
-  /** ✅ **Fixed: Proper Animation Variants** */
   const variants = {
     enter: (direction: number) => ({
       zIndex: 1, 
@@ -60,38 +59,33 @@ export default function Home() {
       zIndex: 2, 
       x: 0,
       opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 30 }
+
     },
     exit: (direction: number) => ({
       zIndex: 0, 
       x: direction < 0 ? 1000 : -1000, 
       opacity: 0, 
+
     }),
   }
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
-      <AnimatePresence custom={direction} mode="popLayout">
+      {images.map((image, index) => (
         <motion.div
-          key={currentState} 
-          custom={direction}
-          variants={variants} 
-          initial="enter" 
-          animate="center" 
-          exit="exit" 
-          transition={{
-            x: { type: "spring", stiffness: 300, damping: 30 },
-            opacity: { duration: 0.5 } 
-          }}
+          key={index} 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: currentState === index ? 1 : 0 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
           className="absolute inset-0 brightness-50"
           style={{
-            backgroundImage: `url("${images[currentState]}")`,
+            backgroundImage: `url("${image}")`,
             backgroundPosition: "center",
             backgroundSize: "cover",
             backgroundAttachment: "fixed",
           }}
         />
-      </AnimatePresence>
+      ))}
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70 z-10" />
 
@@ -99,7 +93,7 @@ export default function Home() {
         className="fixed left-[42%] -translate-x-1/2 z-10 text-center mt-9"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 100 }}
+        transition={{ type: "spring", stiffness: 100, duration: 3 }}
       >
         <h1 className="text-7xl font-serif text-white mb-2">kNews</h1>
         <p className="text-white/80 font-serif font-bold italic">Your Daily Digest</p>
@@ -124,7 +118,7 @@ export default function Home() {
           <Button
             onClick={changeStateBackward}
             variant="ghost"
-            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white"
+            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full w-10 h-10"
           >
             <ChevronLeft className="h-8 w-8" />
           </Button>
@@ -143,7 +137,7 @@ export default function Home() {
           <Button
             onClick={changeStateForward}
             variant="ghost"
-            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white"
+            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full w-10 h-10"
           >
             <ChevronRight className="h-8 w-8" />
           </Button>

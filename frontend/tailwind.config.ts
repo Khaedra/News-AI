@@ -53,6 +53,11 @@ export default {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+		fontFamily: {
+			inter: ["var(--font-inter)", "sans-serif"],
+			playfair: ["var(--font-playfair)", "serif"],
+			sourceSerif: ["var(--font-source-serif)", "serif"],
+		  },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
