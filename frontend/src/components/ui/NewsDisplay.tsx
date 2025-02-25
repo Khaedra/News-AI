@@ -153,7 +153,7 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
 
           <motion.div className="flex  h-[80%] justify-center align-bottom">
             <motion.button
-              
+
               onClick={() => setPressed(true)}
               initial={{ opacity: 0, x: -200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1 }}
               className={`h-14 my-auto w-56 rounded-full  bg-white/1 backdrop-blur-sm text-white border hover:bg-white/20  border-white font-inter `}
