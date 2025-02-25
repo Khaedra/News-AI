@@ -10,10 +10,10 @@ const cleanJsonString = (str: string) => {
 
 
 export default async function Home() {
-  const articles = await getNews()
+  // const articles = await getNews()
   return (
     <>
-      <HomePage data={articles} />
+      <HomePage />
     </>
   )
 

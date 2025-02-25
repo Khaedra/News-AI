@@ -22,8 +22,7 @@ def fetch_news(request, section):  # Change parameter to request
     if (cached_data):
         print(f"Returning cached results for section: {section}")
         return Response(cached_data)
-    
-    
+
     try: 
         guardian = GuardianAPI()
         ai = AISummarizer()

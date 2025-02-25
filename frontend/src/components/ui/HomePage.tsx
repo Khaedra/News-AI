@@ -16,25 +16,72 @@ interface ArticleData {
     article_3: { summary: string; link: string; title: string; image: string; date: string }
     article_4: { summary: string; link: string; title: string; image: string; date: string }
     article_5: { summary: string; link: string; title: string; image: string; date: string }
+}
+
+
+// export async function getNews() {
+//     const sections = ["World", "Tech", "Environment"]
+//     const fetchNews = async (section: string) => {
+//         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/news/${section.toLowerCase()}`)
+//         const responseJson = await response.json()
+//         const parsedData = JSON.parse(cleanJsonString(responseJson.response)) // the ai json
+//         return { section, articles: parsedData }; // an object (section, articles)
+//     }
+
+//     const dataArray = await Promise.all(sections.map(fetchNews));
+
+//     const result = dataArray.reduce((acc, { section, articles }) => {
+//         acc[section] = articles;
+//         return acc;
+//     }, {}) // an object with section: articles
+//     return result;
+
+// }
+
+
+const cleanJsonString = (str: string) => {
+    return str
+      .replace(/^```json\s*/, "")
+      .replace(/\s*```$/, "")
+      .trim()
   }
 
-export default function HomePage({data}) {
+  
+export default function HomePage() {
     const [currentState, setCurrentState] = useState<number>(0)
-    const [direction, setDirection] = useState<number>(0)
+    const [data, setData] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
+    // const [isFetched, setIsFetched] = useState(false)
 
 
     useEffect(() => {
         setTimeout(() => setIsLoading(false), 1500)
+        async function fetchArticles() {
+            const sections = ["World", "Tech", "Environment"]
+            const fetchNews = async (section: string) => {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/news/${section.toLowerCase()}`)
+                const responseJson = await response.json()
+                const parsedData = JSON.parse(cleanJsonString(responseJson.response)) // the ai json
+                return { section, articles: parsedData }; // an object (section, articles)
+            }
+
+            const dataArray = await Promise.all(sections.map(fetchNews));
+
+            const result = dataArray.reduce((acc, { section, articles }) => {
+                acc[section] = articles;
+                return acc;
+            }, {}) // an object with section: articles
+            setData(result);
+            // setIsFetched(true)
+        }
+        fetchArticles()
     }, [])
 
     const changeStateForward = () => {
-        setDirection(1)
         setCurrentState((prev) => (prev + 1) % images.length)
     }
 
     const changeStateBackward = () => {
-        setDirection(-1)
         setCurrentState((prev) => (prev - 1 + images.length) % images.length)
     }
 
@@ -94,7 +141,7 @@ export default function HomePage({data}) {
                             className={`w-2 h-2 rounded-full ${currentState === index ? "bg-white" : "bg-white/50"}`}
                             whileHover={{ scale: 1.2 }}
                             onClick={() => {
-                                setDirection(index > currentState ? 1 : -1)
+                              
                                 setCurrentState(index)
                             }}
                         />
@@ -117,7 +164,7 @@ export default function HomePage({data}) {
                     section={sections[currentState]}
                     buttonText={`Display ${sections[currentState]} News`}
                     articles={data?.[sections[currentState]] || null}
-                /> 
+                />
 
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                     <Button

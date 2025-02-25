@@ -91,7 +91,7 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
 
   return (
     <div className="flex items-center justify-center flex-col w-[80%] h-[40%]">
-      {pressed ? (
+      {(pressed && articles) ? (
         <AnimatePresence mode="wait">
           <Card className="bg-black/20 backdrop-blur-xl text-white border-white/10 w-full">
             <CardContent className="p-6">
@@ -135,31 +135,60 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
           </Card>
           <motion.button key="close" className={`w-56 h-14 my-auto rounded-full  bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105 absolute bottom-24`}
             onClick={() => { setPressed(false) }}
-            initial = {{y: 50}}
-            animate = {{y: 0}}
-            transition = {{duration: 1}}>Close Summary</motion.button>
+            initial={{ y: 50 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 1 }}>Close Summary</motion.button>
         </AnimatePresence>
-      ) : (
-        <div className="grid grid-cols-2 items-center text-center justify-center gap-6 divide-x-3 w-full h-full ">
-          <motion.div initial={{  opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} className="px-4 text-left w-full">
+
+        //NOT PRESSED AND ARTICLES
+      ) : (!pressed && articles) ? (
+        <motion.div className="relative grid grid-cols-2 items-center justify-center gap-6 w-full h-full">
+          <motion.div initial={{ opacity: 0, x: 200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1, ease: "easeOut" }} className="px-4 text-left w-auto">
             <h1 className="font-sourceSerif font-bold text-3xl mb-4 text-white">What is kNews?</h1>
             <p className="text-white font-inter ">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the 5 most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
           </motion.div>
 
+          <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ duration: 1 }} className="h-full w-[0.1rem] absolute left-[51%] bg-white rounded-xl">
+          </motion.div>
+
           <motion.div className="flex  h-[80%] justify-center align-bottom">
             <motion.button
+              
               onClick={() => setPressed(true)}
-
-              initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 1 }}
-              className={`w-56 h-14 my-auto rounded-full  bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105`}
+              initial={{ opacity: 0, x: -200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1 }}
+              className={`h-14 my-auto w-56 rounded-full  bg-white/1 backdrop-blur-sm text-white border hover:bg-white/20  border-white font-inter `}
             >
               {buttonText}
             </motion.button>
 
           </motion.div>
+        </motion.div>
 
-        </div>
-      )}
+
+        //NOT PRESSED AND NO ARTICLES
+      ) :
+
+        <motion.div className="relative grid grid-cols-2 items-center justify-center gap-6 w-full h-full">
+          <motion.div initial={{ opacity: 0, x: 200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1, ease: "easeOut" }} className="px-4 text-left w-auto">
+            <h1 className="font-sourceSerif font-bold text-3xl mb-4 text-white">What is kNews?</h1>
+            <p className="text-white font-inter ">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the 5 most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
+          </motion.div>
+
+          <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ duration: 1 }} className="h-full w-[0.1rem] absolute left-[51%] bg-white rounded-xl">
+          </motion.div>
+
+          <motion.div className="flex  h-[80%] justify-center align-bottom">
+            <motion.button
+              disabled={true}
+              initial={{ opacity: 0, x: -200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1 }}
+              className={`h-14 my-auto w-56 rounded-full  bg-white/1 backdrop-blur-sm text-white border border-white font-inter `}
+            >
+              Fetching...
+            </motion.button>
+
+          </motion.div>
+        </motion.div>
+      }
     </div>
   )
 }
