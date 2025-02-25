@@ -55,10 +55,23 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
 ROOT_URLCONF = 'news_platform.urls'
 
 #added this to. does this need to be changed eventually? 
 CORS_ALLOWED_ORIGINS = [
+    "https://knews-azure.vercel.app/",
     "http://localhost:3000",
 ]
 

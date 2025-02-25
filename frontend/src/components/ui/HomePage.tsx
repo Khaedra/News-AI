@@ -154,7 +154,7 @@ export default function HomePage() {
                         variant="ghost"
                         className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full w-10 h-10"
                     >
-                        <ChevronRight className="h-8 w-8" />
+                        <ChevronRight className="w-24 h-24" />
                     </Button>
                 </motion.div>
             </div>
