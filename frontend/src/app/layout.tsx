@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Inter, Playfair_Display, Source_Serif_4 } from "next/font/google"
-import  GetNews  from "@/components/ui/GetNews"
 
 
 const geistSans = Geist({

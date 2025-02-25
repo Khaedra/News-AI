@@ -1,7 +1,7 @@
 "use client"
 import NewsDisplay from "@/components/ui/NewsDisplay"
 import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 const images = ["/city.jpg", "/redcity.jpg", "/purple.jpg"]
@@ -19,24 +19,6 @@ interface ArticleData {
 }
 
 
-// export async function getNews() {
-//     const sections = ["World", "Tech", "Environment"]
-//     const fetchNews = async (section: string) => {
-//         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/news/${section.toLowerCase()}`)
-//         const responseJson = await response.json()
-//         const parsedData = JSON.parse(cleanJsonString(responseJson.response)) // the ai json
-//         return { section, articles: parsedData }; // an object (section, articles)
-//     }
-
-//     const dataArray = await Promise.all(sections.map(fetchNews));
-
-//     const result = dataArray.reduce((acc, { section, articles }) => {
-//         acc[section] = articles;
-//         return acc;
-//     }, {}) // an object with section: articles
-//     return result;
-
-// }
 
 
 const cleanJsonString = (str: string) => {
@@ -67,7 +49,7 @@ export default function HomePage() {
 
             const dataArray = await Promise.all(sections.map(fetchNews));
 
-            const result = dataArray.reduce((acc, { section, articles }) => {
+            const result = dataArray.reduce<Record<string, ArticleData>>((acc, { section, articles }) => {
                 acc[section] = articles;
                 return acc;
             }, {}) // an object with section: articles

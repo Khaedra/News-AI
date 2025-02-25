@@ -9,13 +9,17 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
 
+// interface ArticleData {
+//   overview: string
+//   article_1: { summary: string; link: string; title: string; image: string; date: string }
+//   article_2: { summary: string; link: string; title: string; image: string; date: string }
+//   article_3: { summary: string; link: string; title: string; image: string; date: string }
+//   article_4: { summary: string; link: string; title: string; image: string; date: string }
+//   article_5: { summary: string; link: string; title: string; image: string; date: string }
+// }
 interface ArticleData {
-  overview: string
-  article_1: { summary: string; link: string; title: string; image: string; date: string }
-  article_2: { summary: string; link: string; title: string; image: string; date: string }
-  article_3: { summary: string; link: string; title: string; image: string; date: string }
-  article_4: { summary: string; link: string; title: string; image: string; date: string }
-  article_5: { summary: string; link: string; title: string; image: string; date: string }
+  overview: string;
+  [key: string]: { summary: string; link: string; title: string; image: string; date: string } | string;
 }
 
 interface NewsDisplayProps {
@@ -128,8 +132,11 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
                     <p className="font-serif text-white/80 leading-relaxed">{articles?.overview}</p>
                   </div>
                 ) : (
-                  <ArticleCard article={articles?.[`article_${selected}`]} index={Number.parseInt(selected)} />
-                )}
+                  <ArticleCard
+                    article={articles?.[`article_${selected}`] as { summary: string; link: string; title: string; image: string; date: string }}
+                    index={Number.parseInt(selected, 10)}
+                  />
+                )}  
               </motion.div>
             </CardContent>
           </Card>
