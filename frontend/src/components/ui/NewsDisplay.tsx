@@ -11,25 +11,18 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface ArticleData {
   overview: string
-  article_1: { summary: string; link: string; title: string; image: string }
-  article_2: { summary: string; link: string; title: string; image: string }
-  article_3: { summary: string; link: string; title: string; image: string }
-  article_4: { summary: string; link: string; title: string; image: string }
-  article_5: { summary: string; link: string; title: string; image: string }
+  article_1: { summary: string; link: string; title: string; image: string; date: string }
+  article_2: { summary: string; link: string; title: string; image: string; date: string }
+  article_3: { summary: string; link: string; title: string; image: string; date: string }
+  article_4: { summary: string; link: string; title: string; image: string; date: string }
+  article_5: { summary: string; link: string; title: string; image: string; date: string }
 }
 
 interface NewsDisplayProps {
   buttonText: string
   section: string
   articles: ArticleData | null
-  setArticles: (data: ArticleData) => void
-}
 
-const cleanJsonString = (str: string) => {
-  return str
-    .replace(/^```json\s*/, "")
-    .replace(/\s*```$/, "")
-    .trim()
 }
 
 
@@ -38,7 +31,7 @@ const getSectionColorClasses = (section: string) => {
     case "World":
       return "data-[state=active]:bg-[#deb841]/30";
     case "Tech":
-        return "data-[state=active]:bg-[#5e0b15]/30";
+      return "data-[state=active]:bg-[#5e0b15]/30";
     case "Environment":
       return "data-[state=active]:bg-[#f5e6e8]/30";
     default:
@@ -46,56 +39,37 @@ const getSectionColorClasses = (section: string) => {
   }
 };
 
-export default function NewsDisplay({ section, buttonText, articles , setArticles}: NewsDisplayProps) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+export default function NewsDisplay({ section, buttonText, articles }: NewsDisplayProps) {
+  const [pressed, setPressed] = useState(false)
   const [selected, setSelected] = useState<string>("overview")
 
   const tabColor = getSectionColorClasses(section);
-
-  // fetch news function
-  const fetchNews = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/news/${section.toLowerCase()}`)
-      const data = await response.json()
-
-      if (data.status === "success") {
-        const parsedData = JSON.parse(cleanJsonString(data.response))
-        setArticles(parsedData)
-      } else {
-        setError("Failed to fetch articles")
-      }
-    } catch (err) {
-      setError("An error occurred while fetching articles")
-    } finally {
-      setLoading(false)
-    }
-  }
 
   // card to display article information
   const ArticleCard = ({ article, index }: { article: any; index: number }) => (
     <motion.div
       initial={{ opacity: 0, x: -100 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.1,
-        duration:1
-       }}
+      transition={{
+        delay: index * 0.1,
+        duration: 1
+      }}
       className="flex gap-6 group"
     >
-  {/* image */}
+      {/* image */}
       <div className="relative overflow-hidden rounded-lg w-[20%]">
         <motion.img
           src={article.image}
           alt="Article image"
-          initial = {{opacity: 0,
+          initial={{
+            opacity: 0,
             x: -250
           }}
-          animate = {{opacity: 1,
+          animate={{
+            opacity: 1,
             x: 0
           }}
-          transition = {{ duration: 1, delay: 0.4, ease: "easeOut"}}
+          transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
           className="object-cover w-full h-full transform hover:scale-110"
         />
 
@@ -103,7 +77,8 @@ export default function NewsDisplay({ section, buttonText, articles , setArticle
 
       </div>
       <div className="flex-1">
-        <h1 className={`font-bold text-2xl mb-4 font-sourceSerif`} >{article.title}</h1>
+        <h1 className={`font-bold text-2xl font-sourceSerif`} >{article.title}</h1>
+        <p className="text-white/80 text-sm font-serif italic mb-4">{article.date}</p>
         <p className="text-white/80 font-serif">{article.summary}</p>
         <Button className="mt-4 text-blue-400 hover:text-white bg-blue-500/20 hover:bg-blue-500/40 gap-2 font-serif" asChild>
           <a href={article.link} target="_blank" rel="noopener noreferrer">
@@ -116,7 +91,7 @@ export default function NewsDisplay({ section, buttonText, articles , setArticle
 
   return (
     <div className="flex items-center justify-center flex-col w-[80%] h-[40%]">
-      {articles ? (
+      {pressed ? (
         <AnimatePresence mode="wait">
           <Card className="bg-black/20 backdrop-blur-xl text-white border-white/10 w-full">
             <CardContent className="p-6">
@@ -124,7 +99,7 @@ export default function NewsDisplay({ section, buttonText, articles , setArticle
                 <Tabs defaultValue={selected} className="w-full" onValueChange={setSelected}>
                   <TabsList className="w-full bg-white/10 p-1">
                     <TabsTrigger value="overview" className={`flex-1 font-inter ${tabColor} data-[state=active]:text-white`}>
-                      Overview
+                      {section} Overview
                     </TabsTrigger>
                     {[1, 2, 3, 4, 5].map((num) => (
                       <TabsTrigger key={num} value={num.toString()} className={` font-inter flex-1 ${tabColor} data-[state=active]:text-white`}>
@@ -134,13 +109,13 @@ export default function NewsDisplay({ section, buttonText, articles , setArticle
                   </TabsList>
                 </Tabs>
               </div>
-             {/* the nav bar */}
+              {/* the nav bar */}
 
               <motion.div
                 key={selected}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-               
+
                 transition={{ duration: 1 }}
                 className="min-h-[300px]"
               >
@@ -150,33 +125,39 @@ export default function NewsDisplay({ section, buttonText, articles , setArticle
                       <Newspaper className="w-8 h-8" />
                       {section} News Overview
                     </h1>
-                    <p className="font-serif text-white/80 leading-relaxed">{articles.overview}</p>
+                    <p className="font-serif text-white/80 leading-relaxed">{articles?.overview}</p>
                   </div>
                 ) : (
-                  <ArticleCard article={articles[`article_${selected}`]} index={Number.parseInt(selected)} />
+                  <ArticleCard article={articles?.[`article_${selected}`]} index={Number.parseInt(selected)} />
                 )}
               </motion.div>
             </CardContent>
           </Card>
+          <motion.button key="close" className={`w-56 h-14 my-auto rounded-full  bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105 absolute bottom-24`}
+            onClick={() => { setPressed(false) }}
+            initial = {{y: 50}}
+            animate = {{y: 0}}
+            transition = {{duration: 1}}>Close Summary</motion.button>
         </AnimatePresence>
       ) : (
         <div className="grid grid-cols-2 items-center text-center justify-center gap-6 divide-x-3 w-full h-full ">
-        <span className="px-4 text-left w-full">  
-          <h1 className="font-sourceSerif font-bold text-3xl mb-4 text-white">What is kNews?</h1>
-          <p className="text-white font-inter ">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
-        </span>
-        
-        <motion.div className="flex  h-[80%] justify-center align-bottom">
-          <Button
-            onClick={fetchNews}
-            disabled={loading}
-            className={`w-48 h-14 my-auto rounded-full  bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105`}
-          >
-            {loading ? "Fetching..." : buttonText}
-          </Button>
-          
-        </motion.div>
-        
+          <motion.div initial={{  opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} className="px-4 text-left w-full">
+            <h1 className="font-sourceSerif font-bold text-3xl mb-4 text-white">What is kNews?</h1>
+            <p className="text-white font-inter ">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the 5 most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
+          </motion.div>
+
+          <motion.div className="flex  h-[80%] justify-center align-bottom">
+            <motion.button
+              onClick={() => setPressed(true)}
+
+              initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+              className={`w-56 h-14 my-auto rounded-full  bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105`}
+            >
+              {buttonText}
+            </motion.button>
+
+          </motion.div>
+
         </div>
       )}
     </div>
