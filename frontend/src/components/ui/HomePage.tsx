@@ -33,8 +33,8 @@ export default function HomePage() {
     const [currentState, setCurrentState] = useState<number>(0)
     const [data, setData] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
-    // const [isFetched, setIsFetched] = useState(false)
-
+    const [isMobile, setIsMobile] = useState(false)
+    
 
     useEffect(() => {
         setTimeout(() => setIsLoading(false), 1500)
@@ -57,6 +57,17 @@ export default function HomePage() {
             // setIsFetched(true)
         }
         fetchArticles()
+
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 961)
+        }
+
+        handleResize()
+        window.addEventListener("resize", handleResize) 
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+
     }, [])
 
     const changeStateForward = () => {
@@ -66,6 +77,19 @@ export default function HomePage() {
     const changeStateBackward = () => {
         setCurrentState((prev) => (prev - 1 + images.length) % images.length)
     }
+    
+
+    if (isMobile) {
+        return (
+            <div className=" flex flex-col justify-center items-center w-screen h-screen bg-black ">
+                <h1 className="text-white text-6xl font-serif">kNews</h1>
+                <h1 className="text-white text-2xl font-playfair my-3">For the best experience, view on Desktop</h1>
+                <p className="text-white text-xl font-playfair">Mobile version coming soon</p>
+            </div>
+        );
+    }
+
+       
 
     if (isLoading) {
         return (
@@ -87,7 +111,10 @@ export default function HomePage() {
         )
     }
 
+
+
     return (
+
         <div className=" w-screen h-screen overflow-hidden">
             {images.map((image, index) => (
                 <motion.div
