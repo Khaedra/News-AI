@@ -7,16 +7,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Newspaper } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-
-
-// interface ArticleData {
-//   overview: string
-//   article_1: { summary: string; link: string; title: string; image: string; date: string }
-//   article_2: { summary: string; link: string; title: string; image: string; date: string }
-//   article_3: { summary: string; link: string; title: string; image: string; date: string }
-//   article_4: { summary: string; link: string; title: string; image: string; date: string }
-//   article_5: { summary: string; link: string; title: string; image: string; date: string }
-// }
 interface ArticleData {
   overview: string;
   [key: string]: { summary: string; link: string; title: string; image: string; date: string } | string;
@@ -28,7 +18,6 @@ interface NewsDisplayProps {
   articles: ArticleData | null
 
 }
-
 
 const getSectionColorClasses = (section: string) => {
   switch (section) {
@@ -48,7 +37,8 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
   const [selected, setSelected] = useState<string>("overview")
 
   const tabColor = getSectionColorClasses(section);
-
+  let date = new Date(Date.now())
+  let dateString = date.toDateString()
   // card to display article information
   const ArticleCard = ({ article, index }: { article: any; index: number }) => (
     <motion.div
@@ -61,7 +51,7 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
       className="flex gap-6 group"
     >
       {/* image */}
-      <div className="relative overflow-hidden rounded-lg w-[20%]">
+      <div className="relative overflow-hidden rounded-lg w-[20%] ">
         <motion.img
           src={article.image}
           alt="Article image"
@@ -78,12 +68,12 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-
       </div>
-      <div className="flex-1">
-        <h1 className={`font-bold text-2xl font-sourceSerif`} >{article.title}</h1>
-        <p className="text-white/80 text-sm font-serif italic mb-4">{article.date}</p>
-        <p className="text-white/80 font-serif">{article.summary}</p>
+
+      <div className="flex-1 p-4">
+        <h1 className={`font-bold text-3xl font-sourceSerif text-wrap`}> {article.title} </h1>
+        <p className="text-white/80 text-lg font-serif mb-4 mt-2">Published: <span className="italic"> {article.date}</span></p>
+        <p className="text-white/80 text-lg font-serif">{article.summary}</p>
         <Button className="mt-4 text-blue-400 hover:text-white bg-blue-500/20 hover:bg-blue-500/40 gap-2 font-serif" asChild>
           <a href={article.link} target="_blank" rel="noopener noreferrer">
             Read Full Article <ArrowRight className="w-4 h-4" />
@@ -101,12 +91,12 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
             <CardContent className="p-6">
               <div className="mb-6">
                 <Tabs defaultValue={selected} className="w-full" onValueChange={setSelected}>
-                  <TabsList className="w-full bg-white/10 p-1">
-                    <TabsTrigger value="overview" className={`flex-1 font-inter ${tabColor} data-[state=active]:text-white`}>
+                  <TabsList className="w-full bg-white/10">
+                    <TabsTrigger value="overview" className={`flex-1 text-lg font-inter ${tabColor} data-[state=active]:text-white`}>
                       {section} Overview
                     </TabsTrigger>
                     {[1, 2, 3, 4, 5].map((num) => (
-                      <TabsTrigger key={num} value={num.toString()} className={` font-inter flex-1 ${tabColor} data-[state=active]:text-white`}>
+                      <TabsTrigger key={num} value={num.toString()} className={` font-inter text-lg flex-1 ${tabColor} data-[state=active]:text-white`}>
                         {num}
                       </TabsTrigger>
                     ))}
@@ -125,11 +115,12 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
               >
                 {selected === "overview" ? (
                   <div className="space-y-4">
-                    <h1 className="font-bold text-3xl font-sourceSerif flex items-center gap-2">
+                    <h1 className="font-bold text-4xl font-sourceSerif flex items-center gap-2">
                       <Newspaper className="w-8 h-8" />
                       {section} News Overview
                     </h1>
-                    <p className="font-serif text-white/80 leading-relaxed">{articles?.overview}</p>
+                    <p className="font-serif italic text-white/80 text-lg">{dateString}</p>
+                    <p className="font-serif text-white/80 text-lg leading-relaxed">{articles?.overview}</p>
                   </div>
                 ) : (
                   <ArticleCard
@@ -140,7 +131,7 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
               </motion.div>
             </CardContent>
           </Card>
-          <motion.button key="close" className={`w-56 h-14 my-auto rounded-full  bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105 absolute bottom-24`}
+          <motion.button key="close" className={`w-56 h-14 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white font-inter hover:scale-105 absolute bottom-5`}
             onClick={() => { setPressed(false) }}
             initial={{ y: 50 }}
             animate={{ y: 0 }}
@@ -149,13 +140,13 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
 
         //NOT PRESSED AND ARTICLES
       ) : (!pressed && articles) ? (
-        <motion.div className="relative grid grid-cols-2 items-center justify-center gap-6 w-full h-full">
-          <motion.div initial={{ opacity: 0, x: 200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1, ease: "easeOut" }} className="px-4 text-left w-auto">
-            <h1 className="font-sourceSerif font-bold text-3xl mb-4 text-white">What is kNews?</h1>
-            <p className="text-white font-inter ">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the 5 most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
+        <motion.div className="relative grid grid-cols-2 items-center justify-center gap-6 w-full h-full p-5">
+          <motion.div initial={{ opacity: 0, x: 200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1, ease: "easeOut" }} className="px-4 mr-5 text-left w-auto">
+            <h1 className="font-sourceSerif font-bold text-4xl mb-4 text-white">What is kNews?</h1>
+            <p className="text-white font-inter text-lg">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the 5 most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
           </motion.div>
 
-          <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ duration: 1 }} className="h-full w-[0.1rem] absolute left-[51%] bg-white rounded-xl">
+          <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ duration: 1 }} className="h-full w-[0.1rem] absolute left-[50%] bg-white rounded-xl">
           </motion.div>
 
           <motion.div className="flex  h-[80%] justify-center align-bottom">
@@ -175,10 +166,10 @@ export default function NewsDisplay({ section, buttonText, articles }: NewsDispl
         //NOT PRESSED AND NO ARTICLES
       ) :
 
-        <motion.div className="relative grid grid-cols-2 items-center justify-center gap-6 w-full h-full">
+        <motion.div className="relative grid grid-cols-2 items-center justify-center gap-6 w-full h-full p-5">
           <motion.div initial={{ opacity: 0, x: 200 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 1, ease: "easeOut" }} className="px-4 text-left w-auto">
-            <h1 className="font-sourceSerif font-bold text-3xl mb-4 text-white">What is kNews?</h1>
-            <p className="text-white font-inter ">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the 5 most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
+            <h1 className="font-sourceSerif font-bold text-4xl mb-4 text-white">What is kNews?</h1>
+            <p className="text-white font-inter text-lg">kNews is your one-stop-site for all your news and information needs. It provides concise, informative, and up-to-date AI summaries of the 5 most important news articles from around the world, in the field of technology, and about the environment. Articles are sourced from The Guardian. Try it out now!</p>
           </motion.div>
 
           <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ duration: 1 }} className="h-full w-[0.1rem] absolute left-[51%] bg-white rounded-xl">

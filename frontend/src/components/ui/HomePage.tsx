@@ -23,12 +23,12 @@ interface ArticleData {
 
 const cleanJsonString = (str: string) => {
     return str
-      .replace(/^```json\s*/, "")
-      .replace(/\s*```$/, "")
-      .trim()
-  }
+        .replace(/^```json\s*/, "")
+        .replace(/\s*```$/, "")
+        .trim()
+}
 
-  
+
 export default function HomePage() {
     const [currentState, setCurrentState] = useState<number>(0)
     const [data, setData] = useState<any>(null)
@@ -88,7 +88,7 @@ export default function HomePage() {
     }
 
     return (
-        <div className="relative w-screen h-screen overflow-hidden">
+        <div className=" w-screen h-screen overflow-hidden">
             {images.map((image, index) => (
                 <motion.div
                     key={index}
@@ -108,13 +108,14 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70 z-10" />
 
             <motion.div
-                className="fixed left-[43%] z-10 text-center mt-9"
+                className="relative mx-auto z-10 text-center mt-9"
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ type: "spring", stiffness: 100, duration: 3 }}
             >
                 <h1 className="text-7xl font-serif text-white mb-2">kNews</h1>
                 <p className="text-white/80 font-serif font-bold italic">Your Daily Digest</p>
+
 
                 <div className="flex gap-2 justify-center mt-4">
                     {sections.map((_, index) => (
@@ -123,7 +124,7 @@ export default function HomePage() {
                             className={`w-2 h-2 rounded-full ${currentState === index ? "bg-white" : "bg-white/50"}`}
                             whileHover={{ scale: 1.2 }}
                             onClick={() => {
-                              
+
                                 setCurrentState(index)
                             }}
                         />
@@ -131,14 +132,14 @@ export default function HomePage() {
                 </div>
             </motion.div>
 
-            <div className="relative flex justify-between px-10 items-center mx-auto w-full h-full z-10">
+            <div className="relative flex justify-between px-10 items-center mx-auto z-10 w-full h-[70%] ">
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                     <Button
                         onClick={changeStateBackward}
                         variant="ghost"
-                        className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full w-10 h-10"
+                        className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full w-16 h-16 inset-0"
                     >
-                        <ChevronLeft className="h-8 w-8" />
+                        <ChevronLeft className="h-14 w-14" />
                     </Button>
                 </motion.div>
 
@@ -152,7 +153,7 @@ export default function HomePage() {
                     <Button
                         onClick={changeStateForward}
                         variant="ghost"
-                        className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full w-10 h-10"
+                        className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full w-16 h-16"
                     >
                         <ChevronRight className="w-24 h-24" />
                     </Button>
